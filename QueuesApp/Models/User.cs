@@ -12,5 +12,22 @@ namespace QueuesApp.Models
         public string fname { get; set; }
         public string lname { get; set; }
         public string hash { get; set; }
+
+
+        public User(int id, string email, string firstName, string lastName, string hash)
+        {
+            this.id = id;
+            this.email = email;
+            this.fname = firstName;
+            this.lname = lastName;
+            this.hash = hash;
+        }
+
+       
+
+        public override int GetHashCode()
+        {
+            return id.GetHashCode();
+        }
     }
 }
