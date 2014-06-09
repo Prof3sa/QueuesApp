@@ -12,7 +12,8 @@ namespace QueuesApp.Models
         private int nextTicket;
 
 
-        public NormalQueue(int id, int ownerID) : base(id, ownerID)
+        public NormalQueue(int id, int ownerID, int servers, double arrivalTime, double serviceTime) : 
+            base(id, ownerID, servers, arrivalTime, serviceTime)
         {
             positions = new Dictionary<User, int>();
             nextTicket = 1;

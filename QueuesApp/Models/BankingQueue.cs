@@ -16,7 +16,8 @@ namespace QueuesApp.Models
         private int current;
         private int nextTicket;
 
-        public BankingQueue(int id, int ownerID) : base(id, ownerID)
+        public BankingQueue(int id, int ownerID, int servers, double arrivalTime, double serviceTime) :
+            base(id, ownerID, servers, arrivalTime, serviceTime)
         {
             records = new Dictionary<int, User>();
             positions = new Dictionary<User, int>();
