@@ -37,6 +37,21 @@ namespace QueuesApp.Models
                 nextTicket += 1;
         }
 
+        public void Skip()
+        {
+            try
+            {
+                User currentUser = null;
+                records.TryGetValue(current, out currentUser);
+                SignalServiceComplete(currentUser);
+
+            }
+            catch(Exception e)
+            {
+
+            }
+        }
+
         public int Current()
         {
             return current;
