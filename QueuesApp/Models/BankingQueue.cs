@@ -27,7 +27,7 @@ namespace QueuesApp.Models
             nextTicket = 1;
         }
 
-        public void AddUser(User U)
+        override public void AddUser(User U)
         {
             records.Add(nextTicket, U);
             positions.Add(U, nextTicket);
@@ -57,7 +57,7 @@ namespace QueuesApp.Models
             return current;
         }
 
-        public void SignalServiceComplete(User U)
+        override public void SignalServiceComplete(User U)
         {
             try
             {
@@ -120,7 +120,7 @@ namespace QueuesApp.Models
             }
         }
 
-        public void ClearQueue()
+        override public void ClearQueue()
         {
             positions.Clear();
             validTickets.Clear();

@@ -20,18 +20,18 @@ namespace QueuesApp.Models
         }
 
 
-        public void AddUser(User U)
+        override public void AddUser(User U)
         {
             positions.Add(U, nextTicket);
             nextTicket += 1;
         }
 
-        public void SignalServiceComplete(User U)
+        override public void SignalServiceComplete(User U)
         {
             positions.Remove(U);
         }
 
-        public void ClearQueue()
+        override public void ClearQueue()
         {
             positions.Clear();
             nextTicket = 1;

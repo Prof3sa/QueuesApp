@@ -68,7 +68,7 @@ namespace QueuesApp.Models
             return client;
         }
 
-        public BankingQueue getNormalQueue(int id)
+        public BankingQueue getBankingQueue(int id)
         {
             BankingQueue client = null;
             try
