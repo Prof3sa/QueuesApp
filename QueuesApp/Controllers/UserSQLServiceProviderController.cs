@@ -10,12 +10,12 @@ namespace QueuesApp.Controllers
     public class UserSQLServiceProviderController : ApiController
     {
 
-        private readonly UserRepository _userRepo;
+        private readonly UserRepository _userRepo = new UserSQLServiceProvider();
 
-        public UserSQLServiceProviderController(UserRepository repo)
-        {
-            _userRepo=repo;
-        }
+        //public UserSQLServiceProviderController(UserRepository repo)
+        //{
+        //    _userRepo=repo;
+        //}
 
         // GET: api/UserSQLServiceProvider
         public IEnumerable<User> Get()
