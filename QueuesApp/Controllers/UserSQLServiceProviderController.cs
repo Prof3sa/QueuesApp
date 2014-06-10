@@ -9,21 +9,49 @@ namespace QueuesApp.Controllers
 {
     public class UserSQLServiceProviderController : ApiController
     {
-        // GET: api/SQLServiceProvider
-        public IEnumerable<string> Get()
+
+        private readonly UserRepository _userRepo;
+
+        public UserSQLServiceProviderController(UserRepository repo)
         {
-            return new string[] { "value1", "value2" };
+            _userRepo=repo;
+        }
+
+        // GET: api/UserSQLServiceProvider
+        public IEnumerable<User> Get()
+        {
+            return _userRepo.Get();
         }
 
         // GET: api/SQLServiceProvider/5
         public User Get(int id)
         {
-            return new UserSQLServiceProvider().getUser(id);
+
+            var user = _userRepo.Get(id);
+
+            if (user == null)
+            {
+                throw new HttpResponseException(new HttpResponseMessage
+                {
+                    StatusCode = HttpStatusCode.NotFound,
+                    Content = new StringContent("Task not found")
+                });
+            }
+
+            return user;
         }
 
+
+
         // POST: api/SQLServiceProvider
-        public void Post([FromBody]string value)
+        public HttpResponseMessage Post([FromBody]User u)
         {
+            u = _userRepo.Post(u);
+
+            if(u==null)
+                return Request.CreateResponse(HttpStatusCode.BadRequest);
+           
+            return Request.CreateResponse(HttpStatusCode.Created,u);
         }
 
         // PUT: api/SQLServiceProvider/5

@@ -2,59 +2,117 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Web;
-using System.Web;
 using System.Data.SqlClient;
 using QueuesApp.Models;
 
 namespace QueuesApp.Models
 {
 
+
+    public interface UserRepository
+    {
+
+        IEnumerable<User> Get();
+        User Get(int id);
+        User Post(User user);
+        User Put(User user);
+        bool Delete(int id);
+
+    }
     public enum QueueType {Banking, Normal};
 
-    public class UserSQLServiceProvider
+    public class UserSQLServiceProvider : UserRepository
     {
 
         //protected SqlConnection con;
         //protected SqlDataReader myReader;
         //private SqlCommand myCommand;
 
-        private Connection con;
+            private Connection con;
+            private List<User> users
+            {
+                get
+                {
+                    if (HttpContext.Current.Cache["Users"] == null)
+                        HttpContext.Current.Cache["Users"] = new List<User>();
+
+                    return HttpContext.Current.Cache["Users"] as List<User>;
+                }
+                set
+                {
+                    HttpContext.Current.Cache["Users"] = value;
+                }
+            }
        
 
-        public UserSQLServiceProvider()
-        {
-            con = Connection.getInstance();
-        }
-
-        private SqlDataReader runOperation(string cmdString)
-        {
-            SqlDataReader reader = null;
-            SqlCommand cmd = null;
-            try
+            public UserSQLServiceProvider()
             {
-                con.getSQLConnection().Open();
-                cmd = new SqlCommand(cmdString, con.getSQLConnection());
-                reader = cmd.ExecuteReader();
-            }
-            catch (Exception e)
-            {
-                Console.Write(e.ToString());
+                con = Connection.getInstance();
             }
 
-            return reader;
+
+        public IEnumerable<User>Get()
+            {
+                return users;
+            }
+
+        public User Get(int id)
+        {
+            var u= users.Find(t => t.id == id);
+            if(u==null)
+            {
+                u = getUserfromDatabase(id);
+            }
+            if(u!=null)
+            {
+                users.Add(u);
+            }
+
+            return u;
+        }
+
+        public User Post(User user)
+        {
+            return createUser(user);
+        }
+
+        public User Put(User user)
+        {
+            var t = Get(user.id);
+            if (t == null)
+                throw new Exception(string.Format("User with id {0} does not exists.", user.id));
+            t.email = user.email;
+            t.fname = user.fname;
+            t.lname = user.lname;
+            t.hash = user.hash;
+
+            updateDatabase(t);
+            return t;
+        }
+
+        public bool Delete(int id)
+        {
+            var u = Get(id); // not in cach
+            if (u == null)
+                return deleteUser(id);
+            users.Remove(u);
+            deleteUser(id);
+            return true;
         }
 
 
-        public NormalQueue getNormalQueue(int id)
+        // returns a list of all database users
+        public IEnumerable<User>  getUsersfromDatabase(int id)
         {
-            NormalQueue client = null;
+            List<User> dbUsers= new List<User>();
             try
             {
-                SqlDataReader userData = runOperation("select * from [NormalQueue] where id=" + id);
-                userData.Read();
-                string s = userData.GetString(2);
-                client = new NormalQueue((int)userData[0], (int)userData[1], (int)userData[2], (double)userData[3], (double)userData[4]);
-                //client = new User((int)userData[0], userData[1].ToString(), userData[2].ToString(), userData[3].ToString(), userData[4].ToString());
+                SqlDataReader userData = runOperation("select * from [user]");
+                
+                while(userData.Read())
+                {
+                dbUsers.Add( new User((int)userData[0], userData[1].ToString(), userData[2].ToString(), userData[3].ToString(), userData[4].ToString()));
+                }
             }
             catch (Exception e)
             {
@@ -65,36 +123,9 @@ namespace QueuesApp.Models
                 if (con.getSQLConnection().State == System.Data.ConnectionState.Open)
                     con.getSQLConnection().Close();
             }
-            return client;
+            return dbUsers;
         }
-
-        public BankingQueue getBankingQueue(int id)
-        {
-            BankingQueue client = null;
-            try
-            {
-                SqlDataReader userData = runOperation("select * from [BankingQueue] where id=" + id);
-                userData.Read();
-                string s = userData.GetString(2);
-                client = new BankingQueue((int)userData[0], (int)userData[1], (int)userData[2], (double)userData[3], (double)userData[4]);
-                //client = new User((int)userData[0], userData[1].ToString(), userData[2].ToString(), userData[3].ToString(), userData[4].ToString());
-            }
-            catch (Exception e)
-            {
-                Console.Write(e.ToString());
-            }
-            finally
-            {
-                if (con.getSQLConnection().State == System.Data.ConnectionState.Open)
-                    con.getSQLConnection().Close();
-            }
-            return client;
-        }
-        
-
-
-
-        public User getUser(int id)
+        public User getUserfromDatabase(int id)
         {
             User client = null;
             try
@@ -116,13 +147,11 @@ namespace QueuesApp.Models
             return client;
         }
 
-        public bool deleteQueue(int id, QueueType type)
+      public bool updateDatabase(User u)
         {
-            string name = (type == QueueType.Banking) ? "[BankingQueue]" : "[NormalQueue]";
-
             try
             {
-                SqlDataReader userData = runOperation("delete * from " + name  +" where id=" + id);
+                SqlDataReader userData = runOperation("update [user] SET email =" + u.email +", FirstName =" +u.fname+ ", LastName="+ u.lname + ", Hash=" + u.hash + "where id=" + u.id);
                 userData.Read();
             }
             catch (Exception e)
@@ -137,7 +166,6 @@ namespace QueuesApp.Models
             }
 
             return true;
-
         }
 
         public bool deleteUser(int id)
@@ -162,29 +190,29 @@ namespace QueuesApp.Models
             return true;
         }
 
-        private string UserInsertString(string email, string firstName, string lastName, string hash)
+        private string UserInsertString(User u)
         {
             string ans = "INSERT INTO [User](Email, Firstname, LastName, Hash) OUTPUT INSERTED.ID VALUES(";
-            ans += email + "," + firstName + "," + lastName + "," + hash;
+            ans += u.email + "," + u.fname + "," + u.lname + "," + u.hash;
             ans += ")";
             return ans;
         }
 
-        public User createUser(string[] s)
+        public User createUser(User u)
         {
-            int id = -1;
 
-           
+
+            
             SqlCommand cmd = new SqlCommand();
             cmd.CommandType = System.Data.CommandType.Text;
-            cmd.CommandText = UserInsertString(s[0], s[1], s[2], s[3]);//"INSERT INTO [User](Email, Firstname, LastName, Hash) OUTPUT INSERTED.ID VALUES('Jason@gmauk.com' ,'fname','lname', 'hash')";
+            cmd.CommandText = UserInsertString(u);//"INSERT INTO [User](Email, Firstname, LastName, Hash) OUTPUT INSERTED.ID VALUES('Jason@gmauk.com' ,'fname','lname', 'hash')";
             cmd.Connection = this.con.getSQLConnection();
 
             try
             {
 
                 con.getSQLConnection().Open();
-                id = (Int32)cmd.ExecuteScalar();
+                u.id = (Int32)cmd.ExecuteScalar();
 
             }
             catch (Exception e)
@@ -196,52 +224,29 @@ namespace QueuesApp.Models
                 con.getSQLConnection().Close();
             }
 
-
-            return getUser(id);
+            
+            return Get(u.id);
 
         }
 
-        private string QueueInsertString(string id, string owner, string servers, string arrivalTime,
-            string serviceTime, string tableName)
+
+        private SqlDataReader runOperation(string cmdString)
         {
-            string ret = "INSERT INTO " + tableName + "() OUTPUT INSERTED.ID VALUES(" + id + "," + owner + "," + 
-                servers + "," + arrivalTime + "," + serviceTime + ");";
-            return ret;
-        }
-
-        public User createUser(string[] s, QueueType type)
-        {
-            int id = -1;
-            string tableName = (type == QueueType.Banking) ? "[BankingQueue]" : "[NormalQueue]";
-
-
-            SqlCommand cmd = new SqlCommand();
-            cmd.CommandType = System.Data.CommandType.Text;
-            cmd.CommandText = QueueInsertString(s[0], s[1], s[2], s[3], s[4], tableName);//"INSERT INTO [User](Email, Firstname, LastName, Hash) OUTPUT INSERTED.ID VALUES('Jason@gmauk.com' ,'fname','lname', 'hash')";
-            cmd.Connection = this.con.getSQLConnection();
-
+            SqlDataReader reader = null;
+            SqlCommand cmd = null;
             try
             {
-
                 con.getSQLConnection().Open();
-                id = (Int32)cmd.ExecuteScalar();
-
+                cmd = new SqlCommand(cmdString, con.getSQLConnection());
+                reader = cmd.ExecuteReader();
             }
             catch (Exception e)
             {
                 Console.Write(e.ToString());
             }
-            finally
-            {
-                con.getSQLConnection().Close();
-            }
 
-
-            return getUser(id);
-
+            return reader;
         }
-
-
 
 
 

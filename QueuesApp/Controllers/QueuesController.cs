@@ -6,7 +6,6 @@ using System.Net.Http;
 using System.Web.Http;
 using System.Data.SqlClient;
 using QueuesApp.Models;
-using QueuesApp.Models;
 namespace QueuesApp.Controllers
 {
     public class QueuesController : ApiController
