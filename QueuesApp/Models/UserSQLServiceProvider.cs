@@ -11,7 +11,7 @@ namespace QueuesApp.Models
 
     public enum QueueType {Banking, Normal};
 
-    public class SQLServiceProvider
+    public class UserSQLServiceProvider
     {
 
         //protected SqlConnection con;
@@ -21,7 +21,7 @@ namespace QueuesApp.Models
         private Connection con;
        
 
-        public SQLServiceProvider()
+        public UserSQLServiceProvider()
         {
             con = Connection.getInstance();
         }

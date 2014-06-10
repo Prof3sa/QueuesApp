@@ -78,16 +78,18 @@
   <ItemGroup>
     <Compile Include="App_Start\WebApiConfig.cs" />
     <Compile Include="Controllers\QueuesController.cs" />
-    <Compile Include="Controllers\UserController.cs" />
+    <Compile Include="Controllers\QueueSQLServiceProviderController.cs" />
+    <Compile Include="Controllers\UserSQLServiceProviderController.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
     <Compile Include="Models\BankingQueue.cs" />
+    <Compile Include="Models\QueueSQLServiceProvider.cs" />
     <Compile Include="Models\Connection.cs" />
     <Compile Include="Models\CustomerQueue.cs" />
     <Compile Include="Models\NormalQueue.cs" />
     <Compile Include="Models\Queues.cs" />
-    <Compile Include="Models\SQLServiceProvider.cs" />
+    <Compile Include="Models\UserSQLServiceProvider.cs" />
     <Compile Include="Models\User.cs" />
     <Compile Include="Models\Users.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
