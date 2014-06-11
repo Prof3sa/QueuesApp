@@ -51,7 +51,7 @@ namespace QueuesApp.Controllers
             resp.data = null;
             string json = JsonConvert.SerializeObject(resp, Formatting.Indented);
 
-            HttpContext.Current.Session["Authenticated"] = true;
+            //HttpContext.Current.Session["Authenticated"] = true;
 
             return json;
         }

@@ -48,7 +48,7 @@ namespace QueuesApp.Controllers
         // POST: api/SQLServiceProvider
         public string Post(UserCreate uc)
         {
-            User u = new User(-1,uc.email,uc.fname,uc.lname);
+            User u = new User(-1,uc.email,uc.fname,uc.lname,"fake_hash");
             u.password = uc.password;
             u = _userRepo.Post(u);
 

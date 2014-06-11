@@ -135,7 +135,7 @@ namespace QueuesApp.Models
                 
                 while(userData.Read())
                 {
-                dbUsers.Add( new User((int)userData[0], userData[1].ToString(), userData[2].ToString(), userData[3].ToString()));
+                dbUsers.Add( new User((int)userData[0], userData[1].ToString(), userData[2].ToString(), userData[3].ToString(),userData[4].ToString()));
                 }
             }
             catch (Exception e)
@@ -157,7 +157,7 @@ namespace QueuesApp.Models
                 SqlDataReader userData = runOperation("select * from [user] where id=" + id);
                 userData.Read();
                 string s = userData.GetString(2);
-                client = new User((int)userData[0], userData[1].ToString(),userData[2].ToString(),userData[3].ToString() );
+                client = new User((int)userData[0], userData[1].ToString(),userData[2].ToString(),userData[3].ToString(),userData[4].ToString() );
             }
             catch (Exception e)
             {
@@ -176,10 +176,10 @@ namespace QueuesApp.Models
             User client = null;
             try
             {
-                SqlDataReader userData = runOperation("select * from [user] where email=" + email);
+                SqlDataReader userData = runOperation("select * from [user] where email='" + email+"'");
                 userData.Read();
                 string s = userData.GetString(2);
-                client = new User((int)userData[0], userData[1].ToString(), userData[2].ToString(), userData[3].ToString());
+                client = new User((int)userData[0], userData[1].ToString(), userData[2].ToString(), userData[3].ToString(),userData[4].ToString());
             }
             catch (Exception e)
             {
@@ -271,7 +271,7 @@ namespace QueuesApp.Models
             u.hash = UserSQLServiceProvider.hashPassword(u.password);
             SqlCommand cmd = new SqlCommand();
             cmd.CommandType = System.Data.CommandType.Text;
-            cmd.CommandText = UserInsertString(u);//"INSERT INTO [User](Email, Firstname, LastName, Hash) OUTPUT INSERTED.ID VALUES('Jason@gmauk.com' ,'fname','lname', 'hash')";
+            cmd.CommandText = UserInsertString(u);
             cmd.Connection = this.con.getSQLConnection();
 
             try

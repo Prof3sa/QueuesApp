@@ -17,12 +17,13 @@ namespace QueuesApp.Models
         public string password { get; set; }
 
 
-        public User(int id, string email, string firstName, string lastName)
+        public User(int id, string email, string firstName, string lastName, string hash)
         {
             this.id = id;
             this.email = email;
             this.fname = firstName;
             this.lname = lastName;
+            this.hash = hash;
            
         }
 
