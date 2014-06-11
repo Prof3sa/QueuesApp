@@ -4,7 +4,7 @@ using System.Linq;
 using System.Web;
 using System.Data.SqlClient;
 using QueuesApp.Models;
-
+using System.Security.Cryptography;
 namespace QueuesApp.Models
 {
 
@@ -71,6 +71,30 @@ namespace QueuesApp.Models
             return u;
         }
 
+
+        public bool userLogin( string email, string password )
+        {
+            User u = this.Get(email);
+            if( u != null )
+            {
+                if (User.hashPassword(password) == u.hash) return true;
+            }
+            return false;
+        }
+
+        public User Get( string email )
+        {
+            var u = users.Find( t=> t.email == email );
+            if( u == null )
+            {
+                u = getUserfromDatabase(email);
+            }
+
+            if (u != null) users.Add(u);
+
+            return u;
+        }
+
         public User Post(User user)
         {
             return createUser(user);
@@ -111,7 +135,7 @@ namespace QueuesApp.Models
                 
                 while(userData.Read())
                 {
-                dbUsers.Add( new User((int)userData[0], userData[1].ToString(), userData[2].ToString(), userData[3].ToString(), userData[4].ToString()));
+                dbUsers.Add( new User((int)userData[0], userData[1].ToString(), userData[2].ToString(), userData[3].ToString()));
                 }
             }
             catch (Exception e)
@@ -133,7 +157,29 @@ namespace QueuesApp.Models
                 SqlDataReader userData = runOperation("select * from [user] where id=" + id);
                 userData.Read();
                 string s = userData.GetString(2);
-                client = new User((int)userData[0], userData[1].ToString(),userData[2].ToString(),userData[3].ToString(),userData[4].ToString() );
+                client = new User((int)userData[0], userData[1].ToString(),userData[2].ToString(),userData[3].ToString() );
+            }
+            catch (Exception e)
+            {
+                Console.Write(e.ToString());
+            }
+            finally
+            {
+                if (con.getSQLConnection().State == System.Data.ConnectionState.Open)
+                    con.getSQLConnection().Close();
+            }
+            return client;
+        }
+
+        public User getUserfromDatabase(string email)
+        {
+            User client = null;
+            try
+            {
+                SqlDataReader userData = runOperation("select * from [user] where email=" + email);
+                userData.Read();
+                string s = userData.GetString(2);
+                client = new User((int)userData[0], userData[1].ToString(), userData[2].ToString(), userData[3].ToString());
             }
             catch (Exception e)
             {
@@ -189,20 +235,40 @@ namespace QueuesApp.Models
 
             return true;
         }
+        
+        
+          public static string hashPassword( string password )
+        {
+            var hasher = SHA1Managed.Create();
+            var pass = System.Text.Encoding.Unicode.GetBytes(password);
+            var hash = hasher.ComputeHash(pass);
 
+            string hash_string = "";
+            for( int i = 0; i < hash.Length; ++i )
+            {
+                hash_string += String.Format("{0:X2}", hash[i]);
+            }
+
+            return hash_string;
+
+        }
+        
         private string UserInsertString(User u)
         {
-            string ans = "INSERT INTO [User](Email, Firstname, LastName, Hash) OUTPUT INSERTED.ID VALUES(";
-            ans += u.email + "," + u.fname + "," + u.lname + "," + u.hash;
-            ans += ")";
+            string ans = "INSERT INTO [User](Email, Firstname, LastName, Hash) OUTPUT INSERTED.ID VALUES('";
+            ans += u.email + "','" + u.fname + "','" + u.lname + "','" + u.hash;
+            ans += "')";
             return ans;
         }
 
         public User createUser(User u)
         {
 
+            if (u == null) return null;
 
-            
+
+
+            u.hash = UserSQLServiceProvider.hashPassword(u.password);
             SqlCommand cmd = new SqlCommand();
             cmd.CommandType = System.Data.CommandType.Text;
             cmd.CommandText = UserInsertString(u);//"INSERT INTO [User](Email, Firstname, LastName, Hash) OUTPUT INSERTED.ID VALUES('Jason@gmauk.com' ,'fname','lname', 'hash')";

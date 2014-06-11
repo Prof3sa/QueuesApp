@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Web;
+using System.Security.Cryptography;
 
 namespace QueuesApp.Models
 {
@@ -13,17 +14,35 @@ namespace QueuesApp.Models
         public string lname { get; set; }
         public string hash { get; set; }
 
+        public string password { get; set; }
 
-        public User(int id, string email, string firstName, string lastName, string hash)
+
+        public User(int id, string email, string firstName, string lastName)
         {
             this.id = id;
             this.email = email;
             this.fname = firstName;
             this.lname = lastName;
-            this.hash = hash;
+           
         }
 
        
+        public static string hashPassword( string password )
+        {
+            var hasher = SHA1Managed.Create();
+            var pass = System.Text.Encoding.Unicode.GetBytes(password);
+            var hash = hasher.ComputeHash(pass);
+
+            string hash_string = "";
+            for( int i = 0; i < hash.Length; ++i )
+            {
+                hash_string += String.Format("{0:X2}", hash[i]);
+            }
+
+            return hash_string;
+
+        }
+
 
         public override int GetHashCode()
         {

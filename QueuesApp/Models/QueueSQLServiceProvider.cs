@@ -98,7 +98,7 @@ namespace QueuesApp.Models
             {
                 SqlDataReader userData = runOperation("select * from [user] where id=" + id);
                 userData.Read();
-                client = new User((int)userData[0], userData[1].ToString(), userData[2].ToString(), userData[3].ToString(), userData[4].ToString());
+                client = new User((int)userData[0], userData[1].ToString(), userData[2].ToString(), userData[3].ToString());
             }
             catch (Exception e)
             {

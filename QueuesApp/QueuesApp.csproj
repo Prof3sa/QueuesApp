@@ -85,11 +85,13 @@
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
     <Compile Include="Models\BankingQueue.cs" />
+    <Compile Include="Models\LoginDetails.cs" />
     <Compile Include="Models\QueueSQLServiceProvider.cs" />
     <Compile Include="Models\Connection.cs" />
     <Compile Include="Models\CustomerQueue.cs" />
     <Compile Include="Models\NormalQueue.cs" />
     <Compile Include="Models\Queues.cs" />
+    <Compile Include="Models\UserCreate.cs" />
     <Compile Include="Models\UserSQLServiceProvider.cs" />
     <Compile Include="Models\User.cs" />
     <Compile Include="Models\Users.cs" />

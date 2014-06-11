@@ -5,6 +5,8 @@ using System.Net;
 using System.Net.Http;
 using System.Web.Http;
 using QueuesApp.Models;
+using QueuesApp.Controllers;
+
 namespace QueuesApp.Controllers
 {
     public class UserSQLServiceProviderController : ApiController
@@ -44,14 +46,19 @@ namespace QueuesApp.Controllers
         
 
         // POST: api/SQLServiceProvider
-        public HttpResponseMessage Post([FromBody]User u)
+        public string Post(UserCreate uc)
         {
+            User u = new User(-1,uc.email,uc.fname,uc.lname);
+            u.password = uc.password;
             u = _userRepo.Post(u);
 
-            if(u==null)
-                return Request.CreateResponse(HttpStatusCode.BadRequest);
-           
-            return Request.CreateResponse(HttpStatusCode.Created,u);
+            return u != null ? "Created!" : "Failure!";
+
+            //if (u == null)
+            //    return Request.CreateResponse(HttpStatusCode.BadRequest);
+            ////return userData;
+
+            //return Request.CreateResponse(HttpStatusCode.Created,u);
         }
 
         // PUT: api/SQLServiceProvider/5

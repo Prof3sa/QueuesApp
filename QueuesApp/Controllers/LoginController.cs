@@ -8,33 +8,52 @@ using System.Web;
 using System.Collections.Specialized;
 using QueuesApp.Utilities;
 using Newtonsoft.Json;
+using QueuesApp.Models;
+using QueuesApp.Controllers;
+
+
 namespace QueuesApp.Controllers
 {
     public class LoginController : ApiController
     {
-        // GET: api/Login
-        public IEnumerable<string> Get()
+        // GET: api/Loginfcdxz
+        public string Get()
         {
-            return new string[] { "value1", "value2" };
+            return "Not Implemented";
         }
 
         // GET: api/Login/5
-        public string Get(string username, string password)
+        public string Get(string email, string password)
         {
             JsonResponse resp = new JsonResponse();
-            resp.success = true;
-            resp.exception = "";
-            UserSQLServiceProviderController t = new UserSQLServiceProviderController();
-            resp.data = t.Get(1);
+
+            UserSQLServiceProvider usp = new UserSQLServiceProvider();
+            bool success = usp.userLogin(email,password);
+            resp.success =  success;
+            resp.exception = (success == true) ? "" : "Invalid Login Credentials!";
+            resp.data = null;
             string json = JsonConvert.SerializeObject(resp, Formatting.Indented);
+
+            HttpContext.Current.Session["Authenticated"] = true;
+            
             return json;
         }
 
         // POST: api/Login
-        public string Post([FromBody]string value)
+        public string Post(LoginDetails loginDetails)
         {
-            NameValueCollection parameters = HttpUtility.ParseQueryString(value);
-            return parameters["password"];
+            JsonResponse resp = new JsonResponse();
+
+            UserSQLServiceProvider usp = new UserSQLServiceProvider();
+            bool success = usp.userLogin(loginDetails.email, loginDetails.password);
+            resp.success = success;
+            resp.exception = (success == true) ? "" : "Invalid Login Credentials!";
+            resp.data = null;
+            string json = JsonConvert.SerializeObject(resp, Formatting.Indented);
+
+            HttpContext.Current.Session["Authenticated"] = true;
+
+            return json;
         }
 
         // PUT: api/Login/5
