@@ -6,42 +6,42 @@ using System.Web;
 namespace QueuesApp.Models
 {
 
-    public interface IBankQueueRepo
+    public interface IQueueRepo
     {
-        IEnumerable<BankingQueue> Get();
-        BankingQueue Get(int id);
-        BankingQueue Post(BankingQueue q);
-        BankingQueue Put(BankingQueue q);
+        IEnumerable<CustomerQueue> Get();
+        CustomerQueue Get(int id);
+        CustomerQueue Post(CustomerQueue q);
+        CustomerQueue Put(CustomerQueue q);
         bool Delete(int id);
     }
-    public class BankingQueueManager : IBankQueueRepo
+    public class QueueManager : IQueueRepo
     {
         private QueueSQLServiceProvider servicer;
 
         
-        private List<BankingQueue> queues
+        private List<CustomerQueue> queues
         {
             get
             {
-                if (HttpContext.Current.Cache["BankingQueues"] == null)
-                    HttpContext.Current.Cache["BankingQueues"] = new List<BankingQueue>();
+                if (HttpContext.Current.Cache["CustomerQueues"] == null)
+                    HttpContext.Current.Cache["CustomerQueues"] = new List<CustomerQueue>();
 
-                return HttpContext.Current.Cache["BankingQueues"] as List<BankingQueue>;
+                return HttpContext.Current.Cache["CustomerQueues"] as List<CustomerQueue>;
             }
             set
             {
-                HttpContext.Current.Cache["BankingQueues"] = value;
+                HttpContext.Current.Cache["CustomerQueues"] = value;
             }
         }
-        public BankingQueueManager()
+        public QueueManager()
         {
             servicer = new QueueSQLServiceProvider();
         }
-        public IEnumerable<BankingQueue> Get()
+        public IEnumerable<CustomerQueue> Get()
         {
             return queues;
         }
-        public BankingQueue Get(int id)
+        public CustomerQueue Get(int id)
         {
             var u = queues.Find(t => t.id == id);
             if (u == null)
@@ -55,11 +55,11 @@ namespace QueuesApp.Models
 
             return u;
         }
-        public BankingQueue Post( BankingQueue q)
+        public CustomerQueue Post( CustomerQueue q)
         {
             return Get(servicer.createBankingQueue(q));
         }
-        public BankingQueue Put( BankingQueue q)
+        public CustomerQueue Put( CustomerQueue q)
         {
             CustomerQueue c = (CustomerQueue)q;
             var t = Get(q.id);
@@ -70,7 +70,7 @@ namespace QueuesApp.Models
             t.serviceTime = c.serviceTime;
             t.interarrivalTime = c.interarrivalTime;
             servicer.updateDatabase(t);
-            return  (BankingQueue)t;
+            return  (CustomerQueue)t;
         }
         public bool Delete(int id)
         {

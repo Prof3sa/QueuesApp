@@ -110,30 +110,30 @@ namespace QueuesApp.Models
 
         }
 
-        private string queueInsertString(CustomerQueue t, string tableName)
+        private string queueInsertString(CustomerQueue t)
         {
-
+            string tableName = t.GetType() == typeof(BankingQueue) ? "BankingQueue" : "Normal Queue";
 
             string ans = "INSERT INTO" + tableName + "(QueueOwner, servers, interarrivalTime,serviceTime) OUTPUT INSERTED.ID VALUES(";
             ans += t.ownerID + "," + t.numServers + "," + t.interarrivalTime + "," + t.serviceTime;
             ans += ")";
             return ans;
         }
-        private string queueUpdateString(CustomerQueue t, string tableName)
+        private string queueUpdateString(CustomerQueue t)
         {
-
+            string tableName = t.GetType() == typeof(BankingQueue) ? "BankingQueue" : "Normal Queue";
 
             return "update " + tableName + " SET QueueOwner =" + t.ownerID + ", servers =" + t.numServers + ", interarrivaltime=" + t.interarrivalTime + ", servicetime=" + t.serviceTime + "where id=" + t.id + ";";
 
         }
-        public int createBankingQueue(BankingQueue q)
+        public int createBankingQueue(CustomerQueue q)
         {
             int id = -1;
 
 
             SqlCommand cmd = new SqlCommand();
             cmd.CommandType = System.Data.CommandType.Text;
-            cmd.CommandText = queueInsertString(q, "BankingQueue");
+            cmd.CommandText = queueInsertString(q);
             cmd.Connection = this.con.getSQLConnection();
 
             try
@@ -157,11 +157,11 @@ namespace QueuesApp.Models
 
         }
 
-        public bool updateDatabase(BankingQueue u)
+        public bool updateDatabase(CustomerQueue u)
         {
             try
             {
-                SqlDataReader userData = runOperation(queueUpdateString(u, "BankingQueue"));
+                SqlDataReader userData = runOperation(queueUpdateString(u));
                 userData.Read();
             }
             catch (Exception e)
@@ -182,7 +182,7 @@ namespace QueuesApp.Models
         {
             try
             {
-                SqlDataReader userData = runOperation(queueUpdateString(u, "NormalQueue"));
+                SqlDataReader userData = runOperation(queueUpdateString(u));
                 userData.Read();
             }
             catch (Exception e)

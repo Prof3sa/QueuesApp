@@ -16,11 +16,11 @@ namespace QueuesApp.Controllers
                                        "Trusted_Connection=no;" +
                                        "database=users; " +
                                        "connection timeout=30");
-        Queues[] queues = new Queues[]
+        Queue[] queues = new Queue[]
         {
-            new Queues{ id=1, length=0, owner="Republic Bank", type="Type 1"},
-            new Queues{ id=2, length=4, owner="Republic Bank", type="Type 1"},
-            new Queues{ id=3, length=2, owner="Republic Bank", type="Type 2"}
+            new Queue{ id=1, length=0, owner="Republic Bank", type="Type 1"},
+            new Queue{ id=2, length=4, owner="Republic Bank", type="Type 1"},
+            new Queue{ id=3, length=2, owner="Republic Bank", type="Type 2"}
         };
 
         public string GetQueues()

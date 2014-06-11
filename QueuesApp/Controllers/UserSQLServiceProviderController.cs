@@ -57,8 +57,18 @@ namespace QueuesApp.Controllers
         }
 
         // PUT: api/SQLServiceProvider/5
-        public void Put(int id, [FromBody]string value)
+        public User Put(UserCreate u)
         {
+            try
+            {
+                u = _userRepo.Put(u);
+            }
+            catch (Exception)
+            {
+
+                throw;
+            }
+            return u;
         }
 
         // DELETE: api/SQLServiceProvider/5

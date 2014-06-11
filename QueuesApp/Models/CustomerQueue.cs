@@ -25,12 +25,15 @@ namespace QueuesApp.Models
         public double serviceTime { get; set; }
         public int numServers { get; set; }
 
+        public List<User> users { get; set; }
         public CustomerQueue(int id, int ownerID, int numServers, double interarrivalTime, double serviceTime)
         {
             this.id = id;
             this.ownerID = ownerID;
             length = 0;
             computeEstimatedWaitingTime(numServers, interarrivalTime, serviceTime);
+
+            users = new List<User>();
 
         }
 
@@ -75,7 +78,7 @@ namespace QueuesApp.Models
 
         public abstract void ClearQueue();
 
-        
+      
 
 
 

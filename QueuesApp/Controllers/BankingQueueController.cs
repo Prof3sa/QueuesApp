@@ -7,9 +7,9 @@ using System.Web.Http;
 using QueuesApp.Models;
 namespace QueuesApp.Controllers
 {
-    public class BankingQueueController : ApiController
+    public class QueueController : ApiController
     {
-        private readonly IBankQueueRepo _bankRepo = new BankingQueueManager();
+        private readonly IQueueRepo _bankRepo = new QueueManager();
         
         // GET: api/BankingQueue
         public IEnumerable<CustomerQueue> Get()
@@ -18,7 +18,7 @@ namespace QueuesApp.Controllers
         }
 
         // GET: api/BankingQueue/5
-        public BankingQueue Get(int id)
+        public CustomerQueue Get(int id)
         {
             var queue = _bankRepo.Get(id);
 
@@ -35,7 +35,7 @@ namespace QueuesApp.Controllers
         }
 
         // POST: api/BankingQueue
-        public HttpResponseMessage Post(BankingQueue q)
+        public HttpResponseMessage Post(CustomerQueue q)
         {
             q = _bankRepo.Post(q);
 
@@ -46,7 +46,7 @@ namespace QueuesApp.Controllers
         }
 
         // PUT: api/BankingQueue/5
-        public BankingQueue Put(BankingQueue q)
+        public CustomerQueue Put(CustomerQueue q)
         {
             try
             {
