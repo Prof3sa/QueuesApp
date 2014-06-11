@@ -12,7 +12,18 @@ namespace QueuesApp
     public class WebApiApplication : System.Web.HttpApplication
     {
 
-        public int n = 5;
+        public override void Init()
+        {
+            this.PostAuthenticateRequest += MvcApplication_PostAuthenticateRequest;
+            base.Init();
+        }
+
+        void MvcApplication_PostAuthenticateRequest(object sender, EventArgs e)
+        {
+            System.Web.HttpContext.Current.SetSessionStateBehavior(
+            System.Web.SessionState.SessionStateBehavior.Required);
+        }
+
         protected void Application_Start()
         {
             GlobalConfiguration.Configure(WebApiConfig.Register);

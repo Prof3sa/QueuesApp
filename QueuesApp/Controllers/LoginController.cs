@@ -16,28 +16,18 @@ namespace QueuesApp.Controllers
 {
     public class LoginController : ApiController
     {
-        // GET: api/Loginfcdxz
+        // GET: api/Login
         public string Get()
-        {
-            return "Not Implemented";
-        }
-
-        // GET: api/Login/5
-        public string Get(string email, string password)
         {
             JsonResponse resp = new JsonResponse();
 
-            UserSQLServiceProvider usp = new UserSQLServiceProvider();
-            bool success = usp.userLogin(email,password);
-            resp.success =  success;
-            resp.exception = (success == true) ? "" : "Invalid Login Credentials!";
-            resp.data = null;
+            bool authenticated = HttpContext.Current.Session["Authenticated"] != null && (Boolean)HttpContext.Current.Session["Authenticated"] == true;
+            resp.success = authenticated;
+            resp.data = resp.exception = null;
             string json = JsonConvert.SerializeObject(resp, Formatting.Indented);
-
-            HttpContext.Current.Session["Authenticated"] = true;
-            
             return json;
         }
+
 
         // POST: api/Login
         public string Post(LoginDetails loginDetails)
@@ -51,19 +41,16 @@ namespace QueuesApp.Controllers
             resp.data = null;
             string json = JsonConvert.SerializeObject(resp, Formatting.Indented);
 
-            //HttpContext.Current.Session["Authenticated"] = true;
+            HttpContext.Current.Session["Authenticated"] = true;
 
             return json;
         }
 
-        // PUT: api/Login/5
-        public void Put(int id, [FromBody]string value)
-        {
-        }
 
         // DELETE: api/Login/5
-        public void Delete(int id)
+        public void Delete()
         {
+            HttpContext.Current.Session["Authenticated"] = false;
         }
     }
 }
