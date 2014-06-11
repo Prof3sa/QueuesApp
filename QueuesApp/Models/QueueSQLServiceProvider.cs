@@ -3,17 +3,15 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Web;
 using System.Data.SqlClient;
-using QueuesApp.Models;
 
 namespace QueuesApp.Models
 {
 
+
+
     public class QueueSQLServiceProvider
     {
 
-        //protected SqlConnection con;
-        //protected SqlDataReader myReader;
-        //private SqlCommand myCommand;
 
         private Connection con;
 
@@ -88,30 +86,6 @@ namespace QueuesApp.Models
             return client;
         }
 
-
-
-
-        public User getUser(int id)
-        {
-            User client = null;
-            try
-            {
-                SqlDataReader userData = runOperation("select * from [user] where id=" + id);
-                userData.Read();
-                client = new User((int)userData[0], userData[1].ToString(), userData[2].ToString(), userData[3].ToString(), userData[4].ToString());
-            }
-            catch (Exception e)
-            {
-                Console.Write(e.ToString());
-            }
-            finally
-            {
-                if (con.getSQLConnection().State == System.Data.ConnectionState.Open)
-                    con.getSQLConnection().Close();
-            }
-            return client;
-        }
-
         public bool deleteQueue(int id, QueueType type)
         {
             string name = (type == QueueType.Banking) ? "[BankingQueue]" : "[NormalQueue]";
@@ -136,12 +110,58 @@ namespace QueuesApp.Models
 
         }
 
-        public bool deleteUser(int id)
+        private string queueInsertString(CustomerQueue t, string tableName)
         {
+
+
+            string ans = "INSERT INTO" + tableName + "(QueueOwner, servers, interarrivalTime,serviceTime) OUTPUT INSERTED.ID VALUES(";
+            ans += t.ownerID + "," + t.numServers + "," + t.interarrivalTime + "," + t.serviceTime;
+            ans += ")";
+            return ans;
+        }
+        private string queueUpdateString(CustomerQueue t, string tableName)
+        {
+
+
+            return "update " + tableName + " SET QueueOwner =" + t.ownerID + ", servers =" + t.numServers + ", interarrivaltime=" + t.interarrivalTime + ", servicetime=" + t.serviceTime + "where id=" + t.id + ";";
+
+        }
+        public int createBankingQueue(BankingQueue q)
+        {
+            int id = -1;
+
+
+            SqlCommand cmd = new SqlCommand();
+            cmd.CommandType = System.Data.CommandType.Text;
+            cmd.CommandText = queueInsertString(q, "BankingQueue");
+            cmd.Connection = this.con.getSQLConnection();
 
             try
             {
-                SqlDataReader userData = runOperation("delete * from [user] where id=" + id);
+
+                con.getSQLConnection().Open();
+                id = (Int32)cmd.ExecuteScalar();
+
+            }
+            catch (Exception e)
+            {
+                Console.Write(e.ToString());
+            }
+            finally
+            {
+                con.getSQLConnection().Close();
+            }
+
+
+            return id;
+
+        }
+
+        public bool updateDatabase(BankingQueue u)
+        {
+            try
+            {
+                SqlDataReader userData = runOperation(queueUpdateString(u, "BankingQueue"));
                 userData.Read();
             }
             catch (Exception e)
@@ -158,88 +178,25 @@ namespace QueuesApp.Models
             return true;
         }
 
-        private string UserInsertString(string email, string firstName, string lastName, string hash)
+        public bool updateDatabase(NormalQueue u)
         {
-            string ans = "INSERT INTO [User](Email, Firstname, LastName, Hash) OUTPUT INSERTED.ID VALUES(";
-            ans += email + "," + firstName + "," + lastName + "," + hash;
-            ans += ")";
-            return ans;
-        }
-
-        public User createUser(string[] s)
-        {
-            int id = -1;
-
-
-            SqlCommand cmd = new SqlCommand();
-            cmd.CommandType = System.Data.CommandType.Text;
-            cmd.CommandText = UserInsertString(s[0], s[1], s[2], s[3]);//"INSERT INTO [User](Email, Firstname, LastName, Hash) OUTPUT INSERTED.ID VALUES('Jason@gmauk.com' ,'fname','lname', 'hash')";
-            cmd.Connection = this.con.getSQLConnection();
-
             try
             {
-
-                con.getSQLConnection().Open();
-                id = (Int32)cmd.ExecuteScalar();
-
+                SqlDataReader userData = runOperation(queueUpdateString(u, "NormalQueue"));
+                userData.Read();
             }
             catch (Exception e)
             {
                 Console.Write(e.ToString());
+                return false;
             }
             finally
             {
-                con.getSQLConnection().Close();
+                if (con.getSQLConnection().State == System.Data.ConnectionState.Open)
+                    con.getSQLConnection().Close();
             }
 
-
-            return getUser(id);
-
+            return true;
         }
-
-        private string QueueInsertString(string id, string owner, string servers, string arrivalTime,
-            string serviceTime, string tableName)
-        {
-            string ret = "INSERT INTO " + tableName + "() OUTPUT INSERTED.ID VALUES(" + id + "," + owner + "," +
-                servers + "," + arrivalTime + "," + serviceTime + ");";
-            return ret;
-        }
-
-        public User createUser(string[] s, QueueType type)
-        {
-            int id = -1;
-            string tableName = (type == QueueType.Banking) ? "[BankingQueue]" : "[NormalQueue]";
-
-
-            SqlCommand cmd = new SqlCommand();
-            cmd.CommandType = System.Data.CommandType.Text;
-            cmd.CommandText = QueueInsertString(s[0], s[1], s[2], s[3], s[4], tableName);//"INSERT INTO [User](Email, Firstname, LastName, Hash) OUTPUT INSERTED.ID VALUES('Jason@gmauk.com' ,'fname','lname', 'hash')";
-            cmd.Connection = this.con.getSQLConnection();
-
-            try
-            {
-
-                con.getSQLConnection().Open();
-                id = (Int32)cmd.ExecuteScalar();
-
-            }
-            catch (Exception e)
-            {
-                Console.Write(e.ToString());
-            }
-            finally
-            {
-                con.getSQLConnection().Close();
-            }
-
-
-            return getUser(id);
-
-        }
-
-
-
-
-
     }
 }

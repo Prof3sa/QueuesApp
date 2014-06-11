@@ -16,6 +16,7 @@ namespace QueuesApp.Models
 
         public string password { get; set; }
 
+        public List<CustomerQueue> queues { get; set; }
 
         public User(int id, string email, string firstName, string lastName, string hash)
         {

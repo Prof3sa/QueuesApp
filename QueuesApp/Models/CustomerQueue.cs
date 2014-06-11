@@ -20,7 +20,10 @@ namespace QueuesApp.Models
         public int length { get; set; }
 
         public double estimatedWaitingTime { get; set; }
+        public double interarrivalTime { get; set; }
 
+        public double serviceTime { get; set; }
+        public int numServers { get; set; }
 
         public CustomerQueue(int id, int ownerID, int numServers, double interarrivalTime, double serviceTime)
         {
