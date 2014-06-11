@@ -41,7 +41,7 @@ namespace QueuesApp.Controllers
             return user;
         }
 
-
+        
 
         // POST: api/SQLServiceProvider
         public HttpResponseMessage Post([FromBody]User u)
