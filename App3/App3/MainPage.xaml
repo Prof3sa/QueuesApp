@@ -1,0 +1,33 @@
+﻿<Page
+    x:Class="App3.MainPage"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:local="using:App3"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    mc:Ignorable="d"
+    Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
+    <Page.Resources>
+        <DataTemplate x:Key="CollectionQueueTemplate">
+            <StackPanel Orientation="Vertical">
+                
+               
+      
+               
+                <TextBlock Text="{Binding QueueOwner}" FontSize="22" />
+                <TextBlock Text="{Binding GetEstimation}" FontSize="22" />
+               
+            </StackPanel>
+        </DataTemplate>
+    </Page.Resources>
+
+    <Grid>
+        <TextBlock x:Name="AppNameTextBlock" HorizontalAlignment="Left" TextWrapping="Wrap" Text="SERVICE ME" VerticalAlignment="Top" FontSize="32" Width="385" TextAlignment="Center" Margin="5,10,0,0"/>
+        <Button x:Name="QRCodeButton" Content="QR CODE" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="10,484,0,0" Width="380" Height="117"/>
+        <ScrollViewer x:Name="QueueScollViewer" HorizontalAlignment="Left" Height="375" VerticalAlignment="Top" Width="380" Margin="10,113,0,0">
+            <ListView x:Name="CollectionView" Height="337" Width="344" ItemTemplate="{StaticResource CollectionQueueTemplate}"/>
+        </ScrollViewer>
+        <Button Content="Banking Queues" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="10,60,0,0" Width="380" Height="62" Click="Button_Click"/>
+
+    </Grid>
+</Page>
