@@ -41,7 +41,7 @@ namespace QueuesApp.Controllers
         
 
         // POST: api/SQLServiceProvider
-        public string Post(UserCreate uc)
+     /*   public string Post(UserCreate uc)
         {
             User u = new User(-1,uc.email,uc.fname,uc.lname,"fake_hash");
             u.password = uc.password;
@@ -55,20 +55,22 @@ namespace QueuesApp.Controllers
 
             //return Request.CreateResponse(HttpStatusCode.Created,u);
         }
-
+        */
         // PUT: api/SQLServiceProvider/5
-        public User Put(UserCreate u)
+        public User Put(UserStructure u)
         {
-            try
-            {
-                u = _userRepo.Put(u);
+           User t= new User(u.id,u.email,u.fname,u.lname,u.hash);
+           try 
+           {
+                t= _userRepo.Put(t);
             }
             catch (Exception)
             {
 
-                throw;
+                
             }
-            return u;
+            return t;
+       
         }
 
         // DELETE: api/SQLServiceProvider/5
