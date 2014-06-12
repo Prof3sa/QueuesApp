@@ -41,21 +41,15 @@ namespace QueuesApp.Controllers
         
 
         // POST: api/SQLServiceProvider
-     /*   public string Post(UserCreate uc)
+        public string Post(UserCreate uc)
         {
             User u = new User(-1,uc.email,uc.fname,uc.lname,"fake_hash");
             u.password = uc.password;
             u = _userRepo.Post(u);
 
             return u != null ? "Created!" : "Failure!";
-
-            //if (u == null)
-            //    return Request.CreateResponse(HttpStatusCode.BadRequest);
-            ////return userData;
-
-            //return Request.CreateResponse(HttpStatusCode.Created,u);
         }
-        */
+        
         // PUT: api/SQLServiceProvider/5
         public User Put(UserStructure u)
         {

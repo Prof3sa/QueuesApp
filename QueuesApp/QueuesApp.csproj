@@ -77,7 +77,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="App_Start\WebApiConfig.cs" />
-    <Compile Include="Controllers\BankingQueueController.cs" />
+    <Compile Include="Controllers\QueueController.cs" />
     <Compile Include="Controllers\LoginController.cs" />
     <Compile Include="Controllers\QueuesController.cs" />
     <Compile Include="Controllers\QueueSQLServiceProviderController.cs" />
