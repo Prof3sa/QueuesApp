@@ -19,7 +19,7 @@ namespace QueuesApp.Models
         bool Delete(int id);
 
     }
-    public enum QueueType {Banking, Normal};
+    
 
     public class UserSQLServiceProvider : UserRepository
     {
@@ -53,7 +53,10 @@ namespace QueuesApp.Models
 
         public IEnumerable<User>Get()
             {
-                return users;
+                List<User> db = getUsersfromDatabase();
+
+
+                return getUsersfromDatabase();
             }
 
         public User Get(int id)
@@ -116,7 +119,7 @@ namespace QueuesApp.Models
 
         public bool Delete(int id)
         {
-            var u = Get(id); // not in cach
+            var u =Get(id); // not in cach
             if (u == null)
                 return deleteUser(id);
             users.Remove(u);
@@ -126,7 +129,7 @@ namespace QueuesApp.Models
 
 
         // returns a list of all database users
-        public IEnumerable<User>  getUsersfromDatabase(int id)
+        public List<User>  getUsersfromDatabase()
         {
             List<User> dbUsers= new List<User>();
             try
@@ -216,10 +219,10 @@ namespace QueuesApp.Models
 
         public bool deleteUser(int id)
         {
-
+            string s = "delete from [user] where id=" + id;
             try
-            {
-                SqlDataReader userData = runOperation("delete * from [user] where id=" + id);
+            {    
+                SqlDataReader userData = runOperation(s);
                 userData.Read();
             }
             catch (Exception e)

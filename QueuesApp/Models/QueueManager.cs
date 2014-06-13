@@ -5,7 +5,7 @@ using System.Web;
 
 namespace QueuesApp.Models
 {
-
+    
     public interface IQueueRepo
     {
         IEnumerable<CustomerQueue> Get();
@@ -17,8 +17,6 @@ namespace QueuesApp.Models
     public class QueueManager : IQueueRepo
     {
         private QueueSQLServiceProvider servicer;
-
-        
         private List<CustomerQueue> queues
         {
             get
@@ -76,7 +74,7 @@ namespace QueuesApp.Models
         {
             var u = Get(id);
             if (u == null)// not in cache
-                return servicer.deleteQueue(id, QueueType.Banking);
+                return servicer.deleteQueue(id,QueueType.Banking);
             queues.Remove(u);
             servicer.deleteQueue(id, QueueType.Banking);
             return true;

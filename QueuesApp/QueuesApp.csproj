@@ -98,6 +98,7 @@
     <Compile Include="Models\UserSQLServiceProvider.cs" />
     <Compile Include="Models\User.cs" />
     <Compile Include="Models\UserStructure.cs" />
+    <Compile Include="Models\UserWrapper.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Utilities\JsonResponse.cs" />
   </ItemGroup>

@@ -6,10 +6,11 @@ using QueuesApp.Models;
 
 namespace QueuesApp.Models
 {
+    public enum QueueType { Banking, Normal };
+       
     public abstract class CustomerQueue
     {
-
-       // public enum QueueType { BankingQueue, NormalQueue };
+        
 
         public int id { get; set; }
 
@@ -21,7 +22,7 @@ namespace QueuesApp.Models
 
         public double estimatedWaitingTime { get; set; }
         public double interarrivalTime { get; set; }
-
+     
         public double serviceTime { get; set; }
         public int numServers { get; set; }
 

@@ -25,8 +25,8 @@ namespace QueuesApp.Controllers
         {
 
             var user = _userRepo.Get(id);
-
-            if (user == null)
+/*
+          if (user == null)
             {
                 throw new HttpResponseException(new HttpResponseMessage
                 {
@@ -34,7 +34,7 @@ namespace QueuesApp.Controllers
                     Content = new StringContent("Task not found")
                 });
             }
-
+            */
             return user;
         }
 
@@ -54,6 +54,8 @@ namespace QueuesApp.Controllers
         public User Put(UserStructure u)
         {
            User t= new User(u.id,u.email,u.fname,u.lname,u.hash);
+           t.queues = u.queues;
+
            try 
            {
                 t= _userRepo.Put(t);
@@ -68,8 +70,13 @@ namespace QueuesApp.Controllers
         }
 
         // DELETE: api/SQLServiceProvider/5
-        public void Delete(int id)
+        public bool Delete(int id)
         {
+           bool i=  _userRepo.Delete(id);
+
+            
+
+            return i;
         }
     }
 }

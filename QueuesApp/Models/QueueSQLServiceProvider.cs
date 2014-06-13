@@ -85,7 +85,7 @@ namespace QueuesApp.Models
             }
             return client;
         }
-
+   
         public bool deleteQueue(int id, QueueType type)
         {
             string name = (type == QueueType.Banking) ? "[BankingQueue]" : "[NormalQueue]";

@@ -14,10 +14,8 @@ namespace QueuesApp.Models
         public string fname { get; set; }
         public string lname { get; set; }
         public string hash { get; set; }
-
         public string password { get; set; }
-
-     //   public IEnumerable<CustomerQueue> queues { get; set;}
+        public string queues { get; set;}
 
     }
 
