@@ -21,20 +21,12 @@ namespace QueuesApp.Controllers
         }
 
         // GET: api/SQLServiceProvider/5
-        public User Get(int id)
+        public User Get(int id, int num)
         {
+          
 
-            var user = _userRepo.Get(id);
-/*
-          if (user == null)
-            {
-                throw new HttpResponseException(new HttpResponseMessage
-                {
-                    StatusCode = HttpStatusCode.NotFound,
-                    Content = new StringContent("Task not found")
-                });
-            }
-            */
+           var user = _userRepo.Get(id);
+          
             return user;
         }
 

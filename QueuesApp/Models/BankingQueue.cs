@@ -3,15 +3,15 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Web;
 using QueuesApp.Models;
-
+using System.Linq.Expressions;
 namespace QueuesApp.Models
 {
     public class BankingQueue : CustomerQueue
     {
 
-        private Dictionary<int, User> records;
-        private Dictionary<User, int> positions;
-        private Dictionary<User, int> swapsLeft;
+        private Dictionary<int, UserWrapper> records;
+        private Dictionary<UserWrapper, int> positions;
+        private Dictionary<UserWrapper, int> swapsLeft;
         private HashSet<int> validTickets;
         private int current;
         private int nextTicket;
@@ -19,20 +19,21 @@ namespace QueuesApp.Models
         public BankingQueue(int id, int ownerID, int servers, double arrivalTime, double serviceTime) :
             base(id, ownerID, servers, arrivalTime, serviceTime)
         {
-            records = new Dictionary<int, User>();
-            positions = new Dictionary<User, int>();
+            records = new Dictionary<int, UserWrapper>();
+            positions = new Dictionary<UserWrapper, int>();
             validTickets = new HashSet<int>();
-            swapsLeft = new Dictionary<User, int>();
+            swapsLeft = new Dictionary<UserWrapper, int>();
             current = 0;
             nextTicket = 1;
         }
 
         override public void AddUser(User U)
         {
-            records.Add(nextTicket, U);
-            positions.Add(U, nextTicket);
+            UserWrapper uw = new UserWrapper(U);
+            records.Add(nextTicket, uw);
+            positions.Add(uw, nextTicket);
             validTickets.Add(nextTicket);
-            swapsLeft.Add(U, 3);
+            swapsLeft.Add(uw, 3);
             while (validTickets.Contains(nextTicket))
                 nextTicket += 1;
         }
@@ -41,9 +42,9 @@ namespace QueuesApp.Models
         {
             try
             {
-                User currentUser = null;
+                UserWrapper currentUser = null;
                 records.TryGetValue(current, out currentUser);
-                SignalServiceComplete(currentUser);
+                SignalServiceComplete(currentUser.u);
 
             }
             catch(Exception e)
@@ -57,8 +58,9 @@ namespace QueuesApp.Models
             return current;
         }
 
-        override public void SignalServiceComplete(User U)
+        override public void SignalServiceComplete(User u)
         {
+            UserWrapper U = new UserWrapper(u);
             try
             {
                 int pos = 0;
@@ -74,7 +76,7 @@ namespace QueuesApp.Models
             }
         }
 
-        public bool SwapCustomer(User U)
+        public bool SwapCustomer(UserWrapper U)
         {
             try
             {
@@ -90,7 +92,7 @@ namespace QueuesApp.Models
                     // If we have another customer behind U, then we swap their positions in the queue
                     if (validTickets.Contains(pos + 1))
                     {
-                        User V = null;
+                        UserWrapper V = null;
                         records.TryGetValue(pos + 1, out  V);
                         records.Add(pos, V);
                         positions.Add(V, pos);
@@ -130,6 +132,18 @@ namespace QueuesApp.Models
         }
 
 
+        override public  IEnumerable<User> getMembers() 
+        {
+            List<UserWrapper> temp = records.Values.ToList<UserWrapper>();
+            List<User> users = new List<User>();
+
+           temp.ForEach(delegate(UserWrapper u)
+            {
+                users.Add(u.u);
+            });
+
+           return users;
+        }
 
     }
 }

@@ -5,6 +5,7 @@ using System.Net;
 using System.Net.Http;
 using System.Web.Http;
 using QueuesApp.Models;
+using System.Web;
 namespace QueuesApp.Controllers
 {
     public class QueueController : ApiController
@@ -64,6 +65,18 @@ namespace QueuesApp.Controllers
             return q;
         }
 
+        public bool Put(int qid, int uid)
+        {
+            CustomerQueue q = Get(qid);
+            if (q == null)
+                return false;
+
+            _bankRepo.Put()
+            
+
+            
+
+        }
         // DELETE: api/BankingQueue/5
         public HttpResponseMessage Delete(int id)
         {

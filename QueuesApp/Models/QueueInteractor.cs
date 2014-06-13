@@ -29,7 +29,7 @@ namespace QueuesApp.Models
 
         public IEnumerable<User> Get()
         {
-            return queue.users;
+            return queue.getMembers();
         }
 
         public User Get(int id)
@@ -50,7 +50,7 @@ namespace QueuesApp.Models
 
         public bool Delete(int id)
         {
-            return queue.users.Remove(Get(id));
+            return false;//queue.SignalServiceComplete(Get(id));
         }
-    }
+ }
 }

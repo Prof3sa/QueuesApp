@@ -79,6 +79,7 @@
     <Compile Include="App_Start\WebApiConfig.cs" />
     <Compile Include="Controllers\QueueController.cs" />
     <Compile Include="Controllers\LoginController.cs" />
+    <Compile Include="Controllers\QueueInteractorController.cs" />
     <Compile Include="Controllers\QueuesController.cs" />
     <Compile Include="Controllers\QueueSQLServiceProviderController.cs" />
     <Compile Include="Controllers\UserSQLServiceProviderController.cs" />

@@ -37,5 +37,9 @@ namespace QueuesApp.Models
             nextTicket = 1;
         }
 
+        public override IEnumerable<User> getMembers()
+        {
+            return null;
+        }
     }
 }
