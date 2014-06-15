@@ -26,7 +26,7 @@ namespace QueuesApp.Controllers
         public string GetQueues()
         {
             string result = "";
-            SqlDataReader reader = null;
+          
            
             try
             {

@@ -46,7 +46,7 @@ namespace QueuesApp.Models
                 SignalServiceComplete(currentUser);
 
             }
-            catch(Exception e)
+            catch(Exception )
             {
 
             }
@@ -68,7 +68,7 @@ namespace QueuesApp.Models
                 swapsLeft.Remove(U);
                 current = pos + 1;
             }
-            catch(ArgumentException e)
+            catch(ArgumentException )
             {
 
             }
@@ -114,7 +114,7 @@ namespace QueuesApp.Models
 
 
             }
-            catch(ArgumentNullException e)
+            catch(ArgumentNullException )
             {
                 return false;
             }
